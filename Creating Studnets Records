@@ -1,0 +1,39 @@
+import pandas as pd
+
+df = pd.read_csv('records.csv')
+class Records:
+    def __init__(self, filename):
+        df = pd.read_csv(filename)
+        self.Stud=df.set_index('Student').T.to_dict('list')
+        self.Grade={'A+':4.3,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1.0,'D-':0.7,'F':0}
+    def get_records(self,student):
+        if student in self.Stud:
+            return self.Stud[student]
+        else:
+            return "No record for {} found".format(student)
+    def insert_record(self,info):
+        self.Stud[info[0]]=info[1:]
+    
+    def compute_gpa(self,student):
+
+        if student in self.Stud:
+            gpa=0
+            for grade in self.Stud[student][2:]:
+                gpa+=self.Grade[grade]
+            return gpa/4
+        else:
+            return "No record for {} found".format(student)
+        
+
+
+student_record=Records("records.csv")
+
+print(student_record.get_records('Gary'))
+
+print(student_record.get_records('Manish'))
+
+student_record.insert_record(['Manish','CS','A','A+','B+','A+'])
+
+print(student_record.get_records('Manish'))
+
+print(student_record.compute_gpa('Manish'))
